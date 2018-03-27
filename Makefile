@@ -1,8 +1,8 @@
-CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
+CXXFLAGS =	-O2 -g -Wall -fmessage-length=0 -std=c++11
 
 OBJS =		PasswordCrackwithMake.o
 
-LIBS =		-lcrypto wordGenerator.cpp 
+LIBS =		-lcrypto -pthread wordGenerator.cpp 
 
 TARGET =	PasswordCrackwithMake
 

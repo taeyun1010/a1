@@ -12,10 +12,11 @@
 #include <openssl/evp.h>
 #include <fstream>
 #include <string.h>
+#include <vector>
 #include "wordGenerator.h"
 //#include "hashChecker.h"
 
-//#include <thread>
+#include <thread>
 using namespace std;
 
 enum { KEYLENGTH = 16 };
@@ -30,6 +31,10 @@ unsigned char answer[] = "451126c581dc3c15f15a111013808610";
 #define NUMCHARS 16
 
 string delimeter = ":";
+
+vector<thread> threads;
+
+ofstream outputfile;
 
 unsigned char salt_value[] = { 's', 'e', 'c', 'l', 'a', 'b' };
 
@@ -203,7 +208,7 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	return result;
 }
 
-char* crack(unsigned char hash[NUMCHARS]){
+char* crack(string number, string username, unsigned char hash[NUMCHARS]){
 	char pwd[100] = "";
 
 
@@ -215,6 +220,12 @@ char* crack(unsigned char hash[NUMCHARS]){
 
 	//delete[] pwd;
 
+//	ofstream myfile;
+//	myfile.open ("Passwords.txt");
+	outputfile << number << ":" << username << ":" << pwd << "\n";
+//	outputfile.close();
+
+
 	return pwd;
 
 }
@@ -224,6 +235,7 @@ int main(void) {
 	//read file
 	string line;
 	ifstream myfile ("hashedPasswords.txt");
+	outputfile.open ("Passwords.txt");
 	if (myfile.is_open())
 	{
 		int index = 0;
@@ -275,17 +287,28 @@ int main(void) {
 //			}
 
 			//char pwd[] = "Qwerty1";
+//
+//			thread t1 (crack, hash);
 
-			//thread t(crack);
+			threads.emplace_back(crack,number, username, hash);
 
-			char* ans = crack(hash);
+//			t1.join();
 
-			delete[] ans;
+			//char* ans = crack(hash);
+
+			//delete[] ans;
 
 //			int result = checkIfCorrect(pwd, hash);
 //			cout << "result = " << result << endl;
 
 		}
+
+		for (thread & t : threads) {
+		    t.join();
+		}
+
+		threads.clear();
+
 		myfile.close();
 	}
 
@@ -299,6 +322,9 @@ int main(void) {
 //	cout << "result = " << result << endl;
 
 	//free(pwd);
+
+	outputfile.close();
+
 
 	return 0;
 }

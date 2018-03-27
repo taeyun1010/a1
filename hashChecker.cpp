@@ -1,37 +1,13 @@
-//============================================================================
-// Name        : PasswordCrackwithMake.cpp
-// Author      : kty
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C, Ansi-style
-//============================================================================
+/*
+ * hashChecker.cpp
+ *
+ *  Created on: Mar 27, 2018
+ *      Author: taeyun
+ */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <openssl/evp.h>
-#include <fstream>
-#include <string.h>
-#include "wordGenerator.h"
-//#include "hashChecker.h"
+#include "hashChecker.h"
 
-//#include <thread>
-using namespace std;
-
-enum { KEYLENGTH = 16 };
-
-unsigned char answer[] = "451126c581dc3c15f15a111013808610";
-
-#define KEY_LEN      32
-#define KEK_KEY_LEN  16
-#define ITERATION    500
-
-// if this number of chars of hash are equal ( 2chars = 1byte), assume whole hash are equal
-#define NUMCHARS 16
-
-string delimeter = ":";
-
-unsigned char salt_value[] = { 's', 'e', 'c', 'l', 'a', 'b' };
+//string delimeter = ":";
 
 
 int retunInt(char upperChar, char lowerChar){
@@ -125,7 +101,7 @@ int retunInt(char upperChar, char lowerChar){
 
 
 //return 1 if equal, 0 otherwise
-int checkIfCorrect(const char pwd[], unsigned char answer[]) {
+int checkIfCorrect(char pwd[], unsigned char answer[]) {
 	int result = 1;
 	size_t i;
 	unsigned char* out;
@@ -201,94 +177,4 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	//free(pwd);
 
 	return result;
-}
-
-char* crack(unsigned char hash[NUMCHARS]){
-	char* pwd;
-
-	tryWords(pwd, hash);
-
-	return pwd;
-
-}
-
-int main(void) {
-
-	//read file
-	string line;
-	ifstream myfile ("hashedPasswords.txt");
-	if (myfile.is_open())
-	{
-		int index = 0;
-		size_t pos = 0;
-		string token;
-		string number;
-		string username;
-		//unsigned char hash[NUMBYTES];
-		while (getline (myfile,line) )
-		{
-			index = 0;
-			pos = 0;
-			token = "";
-			number = "";
-			username = "";
-			//hash = "";
-			unsigned char hash[NUMCHARS];
-
-			while ((pos = line.find(delimeter)) != std::string::npos) {
-
-
-			    token = line.substr(0, pos);
-			    std::cout << token << std::endl;
-			    if(index == 0){
-			    	number = token;
-
-			    }
-			    else if(index == 1){
-			    	username = token;
-			    }
-
-			    line.erase(0, pos + delimeter.length());
-			    index++;
-			}
-
-			cout << line << endl;
-
-
-			for (int i =0; i< NUMCHARS; i++){
-				//hash[i] = line[i];
-				hash[i] = line[i];
-			}
-
-			cout << "number = " << number << endl;
-			cout << "username = " << username << endl;
-//			for (int i=0; i<NUMCHARS; i++){
-//				cout << "hash[i] = " << hash[i] << endl;
-//			}
-
-			char pwd[] = "Qwerty1";
-
-			//thread t(crack);
-
-			crack(hash);
-
-//			int result = checkIfCorrect(pwd, hash);
-//			cout << "result = " << result << endl;
-
-		}
-		myfile.close();
-	}
-
-	else cout << "Unable to open file";
-	//
-
-
-//	char pwd[] = "Qwerty1";
-//	unsigned char answer[] = "451126c581dc3c15f15a111013808610";
-//	int result = checkIfCorrect(pwd, answer);
-//	cout << "result = " << result << endl;
-
-	//free(pwd);
-
-	return 0;
 }

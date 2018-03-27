@@ -11,7 +11,9 @@ using namespace std;
 // if this number of chars of hash are equal ( 2chars = 1byte), assume whole hash are equal
 #define NUMCHARS 16
 
-void tryWords(char* pwd, unsigned char hash[NUMCHARS]){
+//return 1 if pw is found, 0 otherwise
+int tryWords(const char* pwd, unsigned char hash[NUMCHARS]){
+	int returnValue = 0;
 
 	int result = 0;
 
@@ -30,8 +32,11 @@ void tryWords(char* pwd, unsigned char hash[NUMCHARS]){
 		{
 
 			result = checkIfCorrect(line.c_str(), hash);
-			if (result == 1)
+			if (result == 1){
+				returnValue = 1;
+				cout << "line.c_str() = " << line.c_str() << endl;
 				break;
+			}
 //			cout << line << endl;
 
 
@@ -40,7 +45,11 @@ void tryWords(char* pwd, unsigned char hash[NUMCHARS]){
 	}
 	else cout << "Unable to open file";
 
-	pwd = line;
+	pwd = line.c_str();
+
+	cout << "pwd before returning = " << pwd << endl;
+
+	return returnValue;
 	//
 //	cout << "matched? = " << result << endl;
 

@@ -130,16 +130,16 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	size_t i;
 	unsigned char* out;
 	out = (unsigned char *) malloc(sizeof(unsigned char) * KEK_KEY_LEN);
-	printf("pass: %s\n", pwd);
-	printf("ITERATION: %u\n", ITERATION);
-	printf("salt: ");
-	for (i = 0; i < sizeof(salt_value); i++) {
-		printf("%02x", salt_value[i]);
-	}
-	printf("\n");
+	//printf("pass: %s\n", pwd);
+	//printf("ITERATION: %u\n", ITERATION);
+	//printf("salt: ");
+//	for (i = 0; i < sizeof(salt_value); i++) {
+//		printf("%02x", salt_value[i]);
+//	}
+	//printf("\n");
 	if (PKCS5_PBKDF2_HMAC_SHA1(pwd, strlen(pwd), salt_value, sizeof(salt_value),
 			ITERATION, KEK_KEY_LEN, out) != 0) {
-		printf("out: ");
+	//	printf("out: ");
 //		for (i = 0; i < KEK_KEY_LEN; i++) {
 //			printf("%02x", out[i]);
 //			if(out[i] != answer[i]){
@@ -173,7 +173,7 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 
 
 
-			printf("%02x", out[i]);
+		//	printf("%02x", out[i]);
 //			if(out[i] != answer[i]){
 //
 //				//printf("result = ");
@@ -193,7 +193,7 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 //		result = strcmp(out, answer);
 //		//
 
-		printf("\n");
+		//printf("\n");
 	} else {
 		fprintf(stderr, "PKCS5_PBKDF2_HMAC_SHA1 failed\n");
 	}
@@ -203,10 +203,13 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	return result;
 }
 
-char* crack(unsigned char hash[NUMCHARS]){
-	char* pwd;
+const char* crack(unsigned char hash[NUMCHARS]){
+	const char* pwd;
 
-	tryWords(pwd, hash);
+	if(tryWords(pwd, hash)){
+		cout << "cracked pw = " << pwd << endl;
+
+	}
 
 	return pwd;
 

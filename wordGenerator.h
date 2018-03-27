@@ -12,6 +12,6 @@
 
 #define NUMCHARS 16
 
-void tryWords(char* pwd, unsigned char hash[NUMCHARS]);
+int tryWords(const char* pwd, unsigned char hash[NUMCHARS]);
 
 #endif

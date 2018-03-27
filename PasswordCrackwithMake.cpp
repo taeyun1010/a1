@@ -203,13 +203,17 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	return result;
 }
 
-const char* crack(unsigned char hash[NUMCHARS]){
-	const char* pwd;
+char* crack(unsigned char hash[NUMCHARS]){
+	char pwd[100] = "";
+
 
 	if(tryWords(pwd, hash)){
+		//pwd = "found!";
 		cout << "cracked pw = " << pwd << endl;
 
 	}
+
+	//delete[] pwd;
 
 	return pwd;
 
@@ -253,6 +257,7 @@ int main(void) {
 
 			    line.erase(0, pos + delimeter.length());
 			    index++;
+			    //cout << "doing a while loop" << endl;
 			}
 
 			cout << line << endl;
@@ -269,11 +274,13 @@ int main(void) {
 //				cout << "hash[i] = " << hash[i] << endl;
 //			}
 
-			char pwd[] = "Qwerty1";
+			//char pwd[] = "Qwerty1";
 
 			//thread t(crack);
 
-			crack(hash);
+			char* ans = crack(hash);
+
+			delete[] ans;
 
 //			int result = checkIfCorrect(pwd, hash);
 //			cout << "result = " << result << endl;

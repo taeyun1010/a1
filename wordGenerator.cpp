@@ -12,14 +12,16 @@ using namespace std;
 #define NUMCHARS 16
 
 //return 1 if pw is found, 0 otherwise
-int tryWords(const char* pwd, unsigned char hash[NUMCHARS]){
+int tryWords(char* pwd, unsigned char hash[NUMCHARS]){
 	int returnValue = 0;
+
+	//const char *c = new char[100];
 
 	int result = 0;
 
 	//open dictionary
 	string line;
-	ifstream myfile ("dictionaries/english.txt");
+	ifstream myfile ("dictionaries/passwords.txt");
 	if (myfile.is_open())
 	{
 		int index = 0;
@@ -45,9 +47,12 @@ int tryWords(const char* pwd, unsigned char hash[NUMCHARS]){
 	}
 	else cout << "Unable to open file";
 
-	pwd = line.c_str();
+	//pwd = line;
+
+	strcpy(pwd, line.c_str());
 
 	cout << "pwd before returning = " << pwd << endl;
+
 
 	return returnValue;
 	//

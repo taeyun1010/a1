@@ -4,6 +4,7 @@
 //#include <openssl/evp.h>
 //#include <fstream>
 //#include <string.h>
+//#include <mutex>
 #include "wordGenerator.h"
 //#include <thread>
 using namespace std;
@@ -13,7 +14,12 @@ using namespace std;
 
 //return 1 if pw is found, 0 otherwise
 int tryWords(char* pwd, unsigned char hash[NUMCHARS]){
+
+	//pwd = "";
+
 	int returnValue = 0;
+
+
 
 	//const char *c = new char[100];
 
@@ -30,8 +36,12 @@ int tryWords(char* pwd, unsigned char hash[NUMCHARS]){
 		string number;
 		string username;
 		//unsigned char hash[NUMBYTES];
+
+		//cout << "hash[0] = " << hash[0] << endl;
+
 		while (getline (myfile,line) )
 		{
+
 
 			result = checkIfCorrect(line.c_str(), hash);
 			if (result == 1){
@@ -43,19 +53,30 @@ int tryWords(char* pwd, unsigned char hash[NUMCHARS]){
 
 
 		}
+
 		myfile.close();
+
+		if (returnValue == 1){
+
+			strcpy(pwd, line.c_str());
+			cout << "result = " << result << endl;
+
+			cout << "pwd before returning = " << pwd << endl;
+
+
+			return returnValue;
+		}
 	}
 	else cout << "Unable to open file";
 
 	//pwd = line;
 
-	strcpy(pwd, line.c_str());
-
-	cout << "pwd before returning = " << pwd << endl;
-
 
 	return returnValue;
+
 	//
 //	cout << "matched? = " << result << endl;
 
 }
+
+

@@ -13,15 +13,16 @@
 #include <fstream>
 #include <string.h>
 #include <vector>
+//#include <mutex>
 #include "wordGenerator.h"
 //#include "hashChecker.h"
+//#include <thread>
 
-#include <thread>
 using namespace std;
 
 enum { KEYLENGTH = 16 };
 
-unsigned char answer[] = "451126c581dc3c15f15a111013808610";
+//unsigned char answer[] = "451126c581dc3c15f15a111013808610";
 
 #define KEY_LEN      32
 #define KEK_KEY_LEN  16
@@ -32,7 +33,9 @@ unsigned char answer[] = "451126c581dc3c15f15a111013808610";
 
 string delimeter = ":";
 
-vector<thread> threads;
+//vector<thread> threads;
+
+//mutex m;
 
 ofstream outputfile;
 
@@ -131,6 +134,10 @@ int retunInt(char upperChar, char lowerChar){
 
 //return 1 if equal, 0 otherwise
 int checkIfCorrect(const char pwd[], unsigned char answer[]) {
+
+//	if (strcmp (pwd, "Qwerty1") == 0)
+//		cout << pwd << endl;
+
 	int result = 1;
 	size_t i;
 	unsigned char* out;
@@ -192,6 +199,11 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 
 			}
 
+//			if (i == ((NUMCHARS / 2) -1)){
+//				cout << pwd << endl;
+//
+//			}
+
 		}
 
 //		//
@@ -209,7 +221,17 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 }
 
 char* crack(string number, string username, unsigned char hash[NUMCHARS]){
-	char pwd[100] = "";
+//	m.lock();
+
+	thread_local char pwd[100] = "";
+
+//
+//				for (int i=0; i<NUMCHARS; i++){
+//					cout << "hash[i] = " << hash[i] << endl;
+//				}
+
+
+//	lock_guard<mutex> lock(m);
 
 
 	if(tryWords(pwd, hash)){
@@ -225,6 +247,7 @@ char* crack(string number, string username, unsigned char hash[NUMCHARS]){
 	outputfile << number << ":" << username << ":" << pwd << "\n";
 //	outputfile.close();
 
+//	m.unlock();
 
 	return pwd;
 
@@ -244,6 +267,9 @@ int main(void) {
 		string number;
 		string username;
 		//unsigned char hash[NUMBYTES];
+
+		//int k = 0;
+
 		while (getline (myfile,line) )
 		{
 			index = 0;
@@ -290,7 +316,20 @@ int main(void) {
 //
 //			thread t1 (crack, hash);
 
-			threads.emplace_back(crack,number, username, hash);
+
+			crack(number, username, hash);
+//
+//			char pwd2[100] = "";
+
+			//threads.emplace_back(tryWords,new char[100],hash);
+
+
+//			if (k == 3)
+//				break;
+//
+//			k++;
+
+//			threads.emplace_back(crack,number, username, hash);
 
 //			t1.join();
 
@@ -303,11 +342,11 @@ int main(void) {
 
 		}
 
-		for (thread & t : threads) {
-		    t.join();
-		}
-
-		threads.clear();
+//		for (thread & t : threads) {
+//		    t.join();
+//		}
+//
+//		threads.clear();
 
 		myfile.close();
 	}

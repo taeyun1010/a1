@@ -320,16 +320,16 @@ void initialize(){
 				thishash = thishash.substr(0, thishash.length()-1);
 
 				//cout << "thishash = " << thishash << endl;
-				clock_t begin = clock();
+				//clock_t begin = clock();
 
 				hashmap.insert(pair<string,string>(thishash,pwd));
 
 
-				clock_t end = clock();
-				double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-
-				//cout << "numfound = " << numfound << endl;
-				cout << "eplased_secs = " << elapsed_secs << endl;
+//				clock_t end = clock();
+//				double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+//
+//				//cout << "numfound = " << numfound << endl;
+//				cout << "eplased_secs = " << elapsed_secs << endl;
 
 				//hashmap[thishash] =pwd;
 
@@ -394,16 +394,43 @@ void crackUsingHashMap(string number, string username, unsigned char hash[NUMCHA
 //	ofstream myfile;
 //	myfile.open ("Passwords.txt");
 
+	string hashfromfile;
+	char* tab2 = (char*) malloc(100);
+	strcpy(tab2, "");
+	string thisstring = "";
 
-	char* ans3 = tryKnownHashGivenMap(hashmap, hash);
+
+	for (int i = 0; i <NUMCHARS; i++){
+
+		thisstring += hash[i];
+	}
+
+	//cout << "thisstring = " << thisstring << endl;
+
+	string pwd = "";
 
 
-	if (strcmp(ans3, "") != 0)
+	if(hashmap.find(thisstring) != hashmap.end()){
+		pwd = hashmap.find(thisstring)->second;
+		strcpy(tab2, pwd.c_str());
+		//cout <<"tab2 = " << tab2 << endl;
+
+	}
+	//pwd = hashmap.find(thisstring)->second;
+
+
+
+	//strcpy(tab2, pwd.c_str());
+
+
+
+
+	if (strcmp(tab2, "") != 0)
 			numfound++;
 
-	outputfile << number << ":" << username << ":" << ans3 << "\n";
+	outputfile << number << ":" << username << ":" << tab2 << "\n";
 
-	free(ans3);
+	free(tab2);
 
 	//	outputfile.close();
 

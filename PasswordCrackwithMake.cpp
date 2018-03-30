@@ -46,9 +46,10 @@ void initialize(){
 				thishash = hashfromfile.substr((pos+1));
 
 
+				#ifdef __linux__
 				//to get rid of the newline character at the end
 				thishash = thishash.substr(0, thishash.length()-1);
-
+				#endif
 
 				hashmap.insert(pair<string,string>(thishash,pwd));
 

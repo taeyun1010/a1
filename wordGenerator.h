@@ -10,8 +10,8 @@
 #include "PasswordCrackwithMake.h"
 
 
-#define NUMCHARS 16
+#define NUMCHARS 8
 
-int tryWords(char* pwd, unsigned char hash[NUMCHARS]);
+char* tryWords(char* pwd, unsigned char hash[NUMCHARS]);
 
 #endif

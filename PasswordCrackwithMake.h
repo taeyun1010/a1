@@ -8,8 +8,16 @@
 #ifndef PASSWORDCRACKWITHMAKE_H_
 #define PASSWORDCRACKWITHMAKE_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <openssl/evp.h>
+#include <fstream>
+#include <string.h>
+#include "PasswordCrackwithMake.h"
+
 // if this number of chars of hash are equal ( 2chars = 1byte), assume whole hash are equal
-#define NUMCHARS 16
+#define NUMCHARS 8
 
 using namespace std;
 

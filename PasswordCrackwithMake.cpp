@@ -15,6 +15,8 @@
 #include <vector>
 //#include <mutex>
 #include "wordGenerator.h"
+#include "keyboardPattern.h"
+#include "HashTry.h"
 //#include "hashChecker.h"
 //#include <thread>
 
@@ -29,7 +31,7 @@ enum { KEYLENGTH = 16 };
 #define ITERATION    500
 
 // if this number of chars of hash are equal ( 2chars = 1byte), assume whole hash are equal
-#define NUMCHARS 16
+#define NUMCHARS 8
 
 string delimeter = ":";
 
@@ -220,10 +222,13 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 	return result;
 }
 
+
+
 char* crack(string number, string username, unsigned char hash[NUMCHARS]){
 //	m.lock();
 
-	thread_local char pwd[100] = "";
+	//thread_local char pwd[100] = "";
+	char pwd[100] = "";
 
 //
 //				for (int i=0; i<NUMCHARS; i++){
@@ -234,18 +239,32 @@ char* crack(string number, string username, unsigned char hash[NUMCHARS]){
 //	lock_guard<mutex> lock(m);
 
 
-	if(tryWords(pwd, hash)){
-		//pwd = "found!";
-		cout << "cracked pw = " << pwd << endl;
-
-	}
+//	if(tryWords(pwd, hash)){
+//		//pwd = "found!";
+//		cout << "cracked pw = " << pwd << endl;
+//
+//	}
 
 	//delete[] pwd;
 
 //	ofstream myfile;
 //	myfile.open ("Passwords.txt");
-	outputfile << number << ":" << username << ":" << pwd << "\n";
-//	outputfile.close();
+
+	//char* ans = tryWords(pwd, hash);
+
+	//char* ans2 = tryKeyboard(hash);
+
+	char* ans3 = tryKnownHash(hash);
+
+	cout << "ans3 = " << ans3 << endl;
+
+	outputfile << number << ":" << username << ":" << ans3 << "\n";
+//
+//	free(ans);
+//	free(ans2);
+	free(ans3);
+
+	//	outputfile.close();
 
 //	m.unlock();
 
@@ -313,6 +332,7 @@ int main(void) {
 //			}
 
 			//char pwd[] = "Qwerty1";
+			//tryKeyboard(pwd, hash);
 //
 //			thread t1 (crack, hash);
 

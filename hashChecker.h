@@ -15,7 +15,7 @@
 using namespace std;
 
 // if this number of chars of hash are equal ( 2chars = 1byte), assume whole hash are equal
-#define NUMCHARS 16
+#define NUMCHARS 8
 
 //string delimeter = ":";
 

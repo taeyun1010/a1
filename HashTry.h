@@ -14,11 +14,14 @@
 #include <openssl/evp.h>
 #include <fstream>
 #include <string.h>
+#include <map>
 #include "PasswordCrackwithMake.h"
 
 #define NUMCHARS 8
 
 char* tryKnownHash(unsigned char hash[NUMCHARS]);
+
+char* tryKnownHashGivenMap(map<string,string> hashmap, unsigned char hash[NUMCHARS]);
 
 
 

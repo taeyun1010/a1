@@ -9,14 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <openssl/evp.h>
+//#include <openssl/evp.h>
 #include <fstream>
 #include <string.h>
 #include <vector>
 #include <ctime>
+#include <map>
 //#include <mutex>
-#include "wordGenerator.h"
-#include "keyboardPattern.h"
+//#include "wordGenerator.h"
+//#include "keyboardPattern.h"
 #include "HashTry.h"
 //#include "hashChecker.h"
 //#include <thread>
@@ -43,6 +44,9 @@ string delimeter = ":";
 ofstream outputfile;
 
 int numfound = 0;
+
+map<string,string> hashmap;
+map<string,string>::iterator iter;
 
 unsigned char salt_value[] = { 's', 'e', 'c', 'l', 'a', 'b' };
 
@@ -136,102 +140,239 @@ int retunInt(char upperChar, char lowerChar){
 
 }
 
-
-//return 1 if equal, 0 otherwise
-int checkIfCorrect(const char pwd[], unsigned char answer[]) {
-
-//	if (strcmp (pwd, "Qwerty1") == 0)
-//		cout << pwd << endl;
-
-	int result = 1;
-	size_t i;
-	unsigned char* out;
-	out = (unsigned char *) malloc(sizeof(unsigned char) * KEK_KEY_LEN);
-	//printf("pass: %s\n", pwd);
-	//printf("ITERATION: %u\n", ITERATION);
-	//printf("salt: ");
-//	for (i = 0; i < sizeof(salt_value); i++) {
-//		printf("%02x", salt_value[i]);
+//
+////return 1 if equal, 0 otherwise
+//int checkIfCorrect(const char pwd[], unsigned char answer[]) {
+//
+////	if (strcmp (pwd, "Qwerty1") == 0)
+////		cout << pwd << endl;
+//
+//	int result = 1;
+//	size_t i;
+//	unsigned char* out;
+//	out = (unsigned char *) malloc(sizeof(unsigned char) * KEK_KEY_LEN);
+//	//printf("pass: %s\n", pwd);
+//	//printf("ITERATION: %u\n", ITERATION);
+//	//printf("salt: ");
+////	for (i = 0; i < sizeof(salt_value); i++) {
+////		printf("%02x", salt_value[i]);
+////	}
+//	//printf("\n");
+//	if (PKCS5_PBKDF2_HMAC_SHA1(pwd, strlen(pwd), salt_value, sizeof(salt_value),
+//			ITERATION, KEK_KEY_LEN, out) != 0) {
+//	//	printf("out: ");
+////		for (i = 0; i < KEK_KEY_LEN; i++) {
+////			printf("%02x", out[i]);
+////			if(out[i] != answer[i]){
+////
+////				//printf("result = ");
+////				result = 0;
+////				break;
+////			}
+////
+////		}
+////
+////		unsigned int a = 240;
+////		unsigned int b = 15;
+//
+////		for (int j =0; j< NUMCHARS; j++){
+////			//printf("bitwise result = %02x", (out[j] >> 4));
+////			printf("out[j] = %02x\n", out[j] );
+////			//cout << "answer[j] = " << answer[j]<<endl;
+////			//cout << "answer[j] int value = " << answer[j] - '0' << endl;
+//////			cout << "out[j] = " << out[j] << endl;
+////			//cout << "out[j] int value = " << (int) out[j] << endl;
+////		}
+//
+//		for (i = 0; i < (NUMCHARS / 2); i++) {
+//
+//			//2*i   2*i + 1
+//
+//			int temp =	retunInt(answer[(2*i)], answer[(2*i + 1)]);
+//
+//			//cout << "answer[i] int value = " << temp<< endl;
+//
+//
+//
+//		//	printf("%02x", out[i]);
+////			if(out[i] != answer[i]){
+////
+////				//printf("result = ");
+////				result = 0;
+////				break;
+////			}
+//
+//			if(temp != (int) out[i]){
+//				result = 0;
+//				break;
+//
+//			}
+//
+////			if (i == ((NUMCHARS / 2) -1)){
+////				cout << pwd << endl;
+////
+////			}
+//
+//		}
+//
+////		//
+////		result = strcmp(out, answer);
+////		//
+//
+//		//printf("\n");
+//	} else {
+//		fprintf(stderr, "PKCS5_PBKDF2_HMAC_SHA1 failed\n");
 //	}
-	//printf("\n");
-	if (PKCS5_PBKDF2_HMAC_SHA1(pwd, strlen(pwd), salt_value, sizeof(salt_value),
-			ITERATION, KEK_KEY_LEN, out) != 0) {
-	//	printf("out: ");
-//		for (i = 0; i < KEK_KEY_LEN; i++) {
-//			printf("%02x", out[i]);
-//			if(out[i] != answer[i]){
+//	free(out);
+//	//free(pwd);
 //
-//				//printf("result = ");
-//				result = 0;
-//				break;
-//			}
+//	return result;
+//}
 //
-//		}
 //
-//		unsigned int a = 240;
-//		unsigned int b = 15;
-
-//		for (int j =0; j< NUMCHARS; j++){
-//			//printf("bitwise result = %02x", (out[j] >> 4));
-//			printf("out[j] = %02x\n", out[j] );
-//			//cout << "answer[j] = " << answer[j]<<endl;
-//			//cout << "answer[j] int value = " << answer[j] - '0' << endl;
-////			cout << "out[j] = " << out[j] << endl;
-//			//cout << "out[j] int value = " << (int) out[j] << endl;
-//		}
-
-		for (i = 0; i < (NUMCHARS / 2); i++) {
-
-			//2*i   2*i + 1
-
-			int temp =	retunInt(answer[(2*i)], answer[(2*i + 1)]);
-
-			//cout << "answer[i] int value = " << temp<< endl;
-
-
-
-		//	printf("%02x", out[i]);
-//			if(out[i] != answer[i]){
 //
-//				//printf("result = ");
-//				result = 0;
-//				break;
-//			}
+//void crack(string number, string username, unsigned char hash[NUMCHARS]){
+////	m.lock();
+//
+//	//thread_local char pwd[100] = "";
+//	char pwd[100] = "";
+//
+////
+////				for (int i=0; i<NUMCHARS; i++){
+////					cout << "hash[i] = " << hash[i] << endl;
+////				}
+//
+//
+////	lock_guard<mutex> lock(m);
+//
+//
+////	if(tryWords(pwd, hash)){
+////		//pwd = "found!";
+////		cout << "cracked pw = " << pwd << endl;
+////
+////	}
+//
+//	//delete[] pwd;
+//
+////	ofstream myfile;
+////	myfile.open ("Passwords.txt");
+//
+//	char* ans = tryWords(pwd, hash);
+//
+//	char* ans2 = tryKeyboard(hash);
+//
+//	//char* ans3 = tryKnownHash(hash);
+//
+//	//cout << "ans3 = " << ans3 << endl;
+//
+//	if (strcmp(ans, "") != 0)
+//		outputfile << number << ":" << username << ":" << ans << "\n";
+//	else
+//		outputfile << number << ":" << username << ":" << ans2 << "\n";
+//	//else
+//	//	outputfile << number << ":" << username << ":" << ans3 << "\n";
+//	//
+//	free(ans);
+//	free(ans2);
+//	//free(ans3);
+//
+//	//	outputfile.close();
+//
+////	m.unlock();
+//
+//	//return pwd;
+//
+//}
 
-			if(temp != (int) out[i]){
-				result = 0;
-				break;
+//load maps to memory
+void initialize(){
+	//clock_t begin = clock();
 
+	ifstream myfile ("dictionaries/processed_account_pw_withhash.txt");
+	if (myfile.is_open())
+	{
+		string hashfromfile;
+		//int index = 0;
+		size_t pos = 0;
+		string token = "";
+		string pwd = "";
+		string thishash = "";
+
+		while (getline (myfile,hashfromfile) )
+		{
+
+			//index = 0;
+			pos = 0;
+
+			//hash = "";
+
+			while ((pos = hashfromfile.find(delimeter)) != std::string::npos) {
+
+
+				token = hashfromfile.substr(0, pos);
+				//std::cout << token << std::endl;
+
+				pwd = token;
+				thishash = hashfromfile.substr((pos+1));
+
+
+				//to get rid of the newline character at the end
+				thishash = thishash.substr(0, thishash.length()-1);
+
+				//cout << "thishash = " << thishash << endl;
+				clock_t begin = clock();
+
+				hashmap.insert(pair<string,string>(thishash,pwd));
+
+
+				clock_t end = clock();
+				double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+
+				//cout << "numfound = " << numfound << endl;
+				cout << "eplased_secs = " << elapsed_secs << endl;
+
+				//hashmap[thishash] =pwd;
+
+				hashfromfile.erase(0, pos + delimeter.length());
+				//index++;
+				//cout << "doing a while loop" << endl;
 			}
 
-//			if (i == ((NUMCHARS / 2) -1)){
-//				cout << pwd << endl;
-//
-//			}
+
 
 		}
 
-//		//
-//		result = strcmp(out, answer);
-//		//
+//		for(map<string, string>::const_iterator it = hashmap.begin();it != hashmap.end(); ++it)
+//		{
+//		    cout << "hash =" << it->first << "!"<<  "\n";
+//		    cout << "pwd =" << it->second << "!"<< "\n";
+//		}
 
-		//printf("\n");
-	} else {
-		fprintf(stderr, "PKCS5_PBKDF2_HMAC_SHA1 failed\n");
+//		map<string,string>::iterator it = hashmap.find("db51d96c");
+//
+//		cout << "hashmap.find = " << it->second << endl;
+
+		//cout << "hashmap.size() is " << hashmap.size() << '\n';
+
+		myfile.close();
+
 	}
-	free(out);
-	//free(pwd);
+	else cout << "Unable to open file";
 
-	return result;
+//	clock_t end = clock();
+//
+//	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+//
+//		cout << "eplased_secs = " << elapsed_secs << endl;
+
+
 }
 
-
-
-void crack(string number, string username, unsigned char hash[NUMCHARS]){
+void crackUsingHashMap(string number, string username, unsigned char hash[NUMCHARS]){
 //	m.lock();
 
 	//thread_local char pwd[100] = "";
-	char pwd[100] = "";
+	//char pwd[100] = "";
 
 //
 //				for (int i=0; i<NUMCHARS; i++){
@@ -253,24 +394,16 @@ void crack(string number, string username, unsigned char hash[NUMCHARS]){
 //	ofstream myfile;
 //	myfile.open ("Passwords.txt");
 
-	char* ans = tryWords(pwd, hash);
 
-	char* ans2 = tryKeyboard(hash);
+	char* ans3 = tryKnownHashGivenMap(hashmap, hash);
 
-	//char* ans3 = tryKnownHash(hash);
 
-	//cout << "ans3 = " << ans3 << endl;
+	if (strcmp(ans3, "") != 0)
+			numfound++;
 
-	if (strcmp(ans, "") != 0)
-		outputfile << number << ":" << username << ":" << ans << "\n";
-	else
-		outputfile << number << ":" << username << ":" << ans2 << "\n";
-	//else
-	//	outputfile << number << ":" << username << ":" << ans3 << "\n";
-	//
-	free(ans);
-	free(ans2);
-	//free(ans3);
+	outputfile << number << ":" << username << ":" << ans3 << "\n";
+
+	free(ans3);
 
 	//	outputfile.close();
 
@@ -280,11 +413,12 @@ void crack(string number, string username, unsigned char hash[NUMCHARS]){
 
 }
 
+
 void crackUsingHashes(string number, string username, unsigned char hash[NUMCHARS]){
 //	m.lock();
 
 	//thread_local char pwd[100] = "";
-	char pwd[100] = "";
+	//char pwd[100] = "";
 
 //
 //				for (int i=0; i<NUMCHARS; i++){
@@ -328,6 +462,8 @@ void crackUsingHashes(string number, string username, unsigned char hash[NUMCHAR
 int main(void) {
 
 	clock_t begin = clock();
+
+	initialize();
 
 	//read file
 	string line;
@@ -391,8 +527,15 @@ int main(void) {
 //
 //			thread t1 (crack, hash);
 
+
+
+
 			//first try known hashes
-			crackUsingHashes(number, username, hash);
+			//crackUsingHashes(number, username, hash);
+
+			//cout <<"hashmap found = " << (hashmap.find("62bdf155") != hashmap.end()) << endl;
+
+			crackUsingHashMap(number,username,hash);
 
 			//crack(number, username, hash);
 //
@@ -492,7 +635,10 @@ int main(void) {
 //			//			thread t1 (crack, hash);
 //
 //			//first try known hashes
-//			//crackUsingHashes(number, username, hash);
+			//crackUsingHashes(number, username, hash);
+
+
+
 //
 //			crack(number, username, hash);
 //			//

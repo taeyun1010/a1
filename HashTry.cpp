@@ -21,6 +21,41 @@ unsigned char salt_value2[] = { 's', 'e', 'c', 'l', 'a', 'b' };
 
 string delimeter2 = ":";
 
+char* tryKnownHashGivenMap(map<string,string> hashmap, unsigned char hash[NUMCHARS]){
+
+	string hashfromfile;
+	char* tab2 = (char*) malloc(100);
+	strcpy(tab2, "");
+	string thisstring = "";
+
+
+	for (int i = 0; i <NUMCHARS; i++){
+
+		thisstring += hash[i];
+	}
+
+	//cout << "thisstring = " << thisstring << endl;
+
+	string pwd = "";
+
+
+	if(hashmap.find(thisstring) != hashmap.end()){
+		pwd = hashmap.find(thisstring)->second;
+		strcpy(tab2, pwd.c_str());
+		//cout <<"tab2 = " << tab2 << endl;
+
+	}
+	//pwd = hashmap.find(thisstring)->second;
+
+
+
+	//strcpy(tab2, pwd.c_str());
+
+
+	return tab2;
+
+}
+
 char* tryKnownHash(unsigned char hash[NUMCHARS]){
 
 	string hashfromfile;

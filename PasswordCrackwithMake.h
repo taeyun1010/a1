@@ -25,7 +25,8 @@ int retunInt(char upperChar, char lowerChar);
 
 //return 1 if equal, 0 otherwise
 int checkIfCorrect(const char pwd[], unsigned char answer[]);
-char* crack(string number, string username, unsigned char hash[NUMCHARS]);
+void crack(string number, string username, unsigned char hash[NUMCHARS]);
+void crackUsingHashes(string number, string username, unsigned char hash[NUMCHARS]);
 
 
 #endif /* PASSWORDCRACKWITHMAKE_H_ */

@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string.h>
 #include <vector>
+#include <ctime>
 //#include <mutex>
 #include "wordGenerator.h"
 #include "keyboardPattern.h"
@@ -40,6 +41,8 @@ string delimeter = ":";
 //mutex m;
 
 ofstream outputfile;
+
+int numfound = 0;
 
 unsigned char salt_value[] = { 's', 'e', 'c', 'l', 'a', 'b' };
 
@@ -224,7 +227,7 @@ int checkIfCorrect(const char pwd[], unsigned char answer[]) {
 
 
 
-char* crack(string number, string username, unsigned char hash[NUMCHARS]){
+void crack(string number, string username, unsigned char hash[NUMCHARS]){
 //	m.lock();
 
 	//thread_local char pwd[100] = "";
@@ -250,29 +253,81 @@ char* crack(string number, string username, unsigned char hash[NUMCHARS]){
 //	ofstream myfile;
 //	myfile.open ("Passwords.txt");
 
-	//char* ans = tryWords(pwd, hash);
+	char* ans = tryWords(pwd, hash);
 
-	//char* ans2 = tryKeyboard(hash);
+	char* ans2 = tryKeyboard(hash);
+
+	//char* ans3 = tryKnownHash(hash);
+
+	//cout << "ans3 = " << ans3 << endl;
+
+	if (strcmp(ans, "") != 0)
+		outputfile << number << ":" << username << ":" << ans << "\n";
+	else
+		outputfile << number << ":" << username << ":" << ans2 << "\n";
+	//else
+	//	outputfile << number << ":" << username << ":" << ans3 << "\n";
+	//
+	free(ans);
+	free(ans2);
+	//free(ans3);
+
+	//	outputfile.close();
+
+//	m.unlock();
+
+	//return pwd;
+
+}
+
+void crackUsingHashes(string number, string username, unsigned char hash[NUMCHARS]){
+//	m.lock();
+
+	//thread_local char pwd[100] = "";
+	char pwd[100] = "";
+
+//
+//				for (int i=0; i<NUMCHARS; i++){
+//					cout << "hash[i] = " << hash[i] << endl;
+//				}
+
+
+//	lock_guard<mutex> lock(m);
+
+
+//	if(tryWords(pwd, hash)){
+//		//pwd = "found!";
+//		cout << "cracked pw = " << pwd << endl;
+//
+//	}
+
+	//delete[] pwd;
+
+//	ofstream myfile;
+//	myfile.open ("Passwords.txt");
+
 
 	char* ans3 = tryKnownHash(hash);
 
-	cout << "ans3 = " << ans3 << endl;
+
+	if (strcmp(ans3, "") != 0)
+			numfound++;
 
 	outputfile << number << ":" << username << ":" << ans3 << "\n";
-//
-//	free(ans);
-//	free(ans2);
+
 	free(ans3);
 
 	//	outputfile.close();
 
 //	m.unlock();
 
-	return pwd;
+	//return pwd;
 
 }
 
 int main(void) {
+
+	clock_t begin = clock();
 
 	//read file
 	string line;
@@ -303,7 +358,7 @@ int main(void) {
 
 
 			    token = line.substr(0, pos);
-			    std::cout << token << std::endl;
+			    //std::cout << token << std::endl;
 			    if(index == 0){
 			    	number = token;
 
@@ -317,7 +372,7 @@ int main(void) {
 			    //cout << "doing a while loop" << endl;
 			}
 
-			cout << line << endl;
+			//cout << line << endl;
 
 
 			for (int i =0; i< NUMCHARS; i++){
@@ -325,8 +380,8 @@ int main(void) {
 				hash[i] = line[i];
 			}
 
-			cout << "number = " << number << endl;
-			cout << "username = " << username << endl;
+			//cout << "number = " << number << endl;
+			//cout << "username = " << username << endl;
 //			for (int i=0; i<NUMCHARS; i++){
 //				cout << "hash[i] = " << hash[i] << endl;
 //			}
@@ -336,8 +391,10 @@ int main(void) {
 //
 //			thread t1 (crack, hash);
 
+			//first try known hashes
+			crackUsingHashes(number, username, hash);
 
-			crack(number, username, hash);
+			//crack(number, username, hash);
 //
 //			char pwd2[100] = "";
 
@@ -368,22 +425,129 @@ int main(void) {
 //
 //		threads.clear();
 
-		myfile.close();
+		//myfile.close();
 	}
 
 	else cout << "Unable to open file";
+//
+////	string line;
+//	ifstream myfile2 ("hashedPasswords.txt");
+//	//outputfile.open ("Passwords.txt");
+//	if (myfile2.is_open())
+//	{
+//		int index = 0;
+//		size_t pos = 0;
+//		string token;
+//		string number;
+//		string username;
+//		//unsigned char hash[NUMBYTES];
+//
+//		//int k = 0;
+//
+//		while (getline (myfile2,line) )
+//		{
+//			index = 0;
+//			pos = 0;
+//			token = "";
+//			number = "";
+//			username = "";
+//			//hash = "";
+//			unsigned char hash[NUMCHARS];
+//
+//			while ((pos = line.find(delimeter)) != std::string::npos) {
+//
+//
+//				token = line.substr(0, pos);
+//				std::cout << token << std::endl;
+//				if(index == 0){
+//					number = token;
+//
+//				}
+//				else if(index == 1){
+//					username = token;
+//				}
+//
+//				line.erase(0, pos + delimeter.length());
+//				index++;
+//				//cout << "doing a while loop" << endl;
+//			}
+//
+//			cout << line << endl;
+//
+//
+//			for (int i =0; i< NUMCHARS; i++){
+//				//hash[i] = line[i];
+//				hash[i] = line[i];
+//			}
+//
+//			cout << "number = " << number << endl;
+//			cout << "username = " << username << endl;
+//			//			for (int i=0; i<NUMCHARS; i++){
+//			//				cout << "hash[i] = " << hash[i] << endl;
+//			//			}
+//
+//			//char pwd[] = "Qwerty1";
+//			//tryKeyboard(pwd, hash);
+//			//
+//			//			thread t1 (crack, hash);
+//
+//			//first try known hashes
+//			//crackUsingHashes(number, username, hash);
+//
+//			crack(number, username, hash);
+//			//
+//			//			char pwd2[100] = "";
+//
+//			//threads.emplace_back(tryWords,new char[100],hash);
+//
+//
+//			//			if (k == 3)
+//			//				break;
+//			//
+//			//			k++;
+//
+//			//			threads.emplace_back(crack,number, username, hash);
+//
+//			//			t1.join();
+//
+//			//char* ans = crack(hash);
+//
+//			//delete[] ans;
+//
+//			//			int result = checkIfCorrect(pwd, hash);
+//			//			cout << "result = " << result << endl;
+//
+//		}
+//
+//		//		for (thread & t : threads) {
+//		//		    t.join();
+//		//		}
+//		//
+//		//		threads.clear();
+//
+//		myfile.close();
+//	}
+//
+//	else cout << "Unable to open file";
+
 	//
 
 
-//	char pwd[] = "Qwerty1";
-//	unsigned char answer[] = "451126c581dc3c15f15a111013808610";
-//	int result = checkIfCorrect(pwd, answer);
-//	cout << "result = " << result << endl;
+	//	char pwd[] = "Qwerty1";
+	//	unsigned char answer[] = "451126c581dc3c15f15a111013808610";
+	//	int result = checkIfCorrect(pwd, answer);
+	//	cout << "result = " << result << endl;
 
 	//free(pwd);
 
 	outputfile.close();
 
+
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+
+	cout << "numfound = " << numfound << endl;
+	cout << "eplased_secs = " << elapsed_secs << endl;
 
 	return 0;
 }

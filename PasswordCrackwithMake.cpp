@@ -24,7 +24,7 @@ map<string,string> hashmap;
 void initialize(){
 	//clock_t begin = clock();
 
-	ifstream myfile ("dictionaries/processed_account_pw_withhash.txt");
+	ifstream myfile ("processed_account_pw_withhash.txt");
 	if (myfile.is_open())
 	{
 		string hashfromfile;
